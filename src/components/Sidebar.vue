@@ -31,47 +31,47 @@ export default {
       collapse: false,
       items: [
         {
-          icon: "el-icon-setting",
+          icon: "el-icon-third-baobiao-xianxing",
           index: "Dashboard",
           title: "Dashboard"
         },
         {
-          icon: "el-icon-setting",
+          icon: "el-icon-third-caiwu-xianxing",
           index: "Quotation",
           title: "Quotation"
         },
         {
-          icon: "el-icon-setting",
+          icon: "el-icon-date",
           index: "SalesOrder",
           title: "SalesOrder"
         },
         {
-          icon: "el-icon-setting",
+          icon: "el-icon-goods",
           index: "Product",
           title: "Product"
         },
         {
-          icon: "el-icon-setting",
+          icon: "el-icon-menu",
           index: "Accessory",
           title: "Accessory"
         },
         {
-          icon: "el-icon-setting",
+          icon: "el-icon-document",
           index: "Category",
           title: "Category"
         },
         {
-          icon: "el-icon-setting",
+          icon: "el-icon-third-hezuoguanxi-xianxing",
           index: "Client",
           title: "Client"
         },
         {
-          icon: "el-icon-setting",
+          icon: "el-icon-third-weizhi-xianxing",
           index: "Location",
           title: "Location"
         },
         {
-          icon: "el-icon-setting",
+          icon: "el-icon-third-caigou-xianxing",
           index: "Supplier",
           title: "Supplier"
         }
@@ -97,7 +97,7 @@ export default {
   display: block;
   position: absolute;
   left: 0;
-  top: 0;
+  top: 70px;
   bottom: 0;
   overflow-y: scroll;
   text-align: left;

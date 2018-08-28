@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Home from "@/components/Home";
+import Login from "@/components/Login";
 import Dashboard from "@/components/pages/Dashboard";
 import Accessory from "@/components/pages/Accessory";
 import Category from "@/components/pages/Category";
@@ -70,6 +71,10 @@ export default new Router({
           meta: { title: "Supplier" }
         }
       ]
+    },
+    {
+      path: "/Login",
+      component: Login
     },
     {
       path: "/404",
