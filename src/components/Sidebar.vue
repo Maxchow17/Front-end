@@ -66,14 +66,14 @@ export default {
           title: "Client"
         },
         {
-          icon: "el-icon-third-weizhi-xianxing",
-          index: "Location",
-          title: "Location"
-        },
-        {
           icon: "el-icon-third-caigou-xianxing",
           index: "Supplier",
           title: "Supplier"
+        },
+        {
+          icon: "el-icon-third-weizhi-xianxing",
+          index: "Location",
+          title: "Location"
         }
       ]
     };
