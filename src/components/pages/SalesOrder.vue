@@ -5,3 +5,12 @@
         </span>
     </div>
 </template>
+
+<script>
+export default {
+  name: "SalesOrder",
+  data() {
+    return {};
+  }
+};
+</script>

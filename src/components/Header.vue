@@ -5,6 +5,7 @@
             <i class="el-icon-menu"></i>
         </div>
         <div class="logo">Manage System</div>
+        <breadcrumb class="breadcrumb-container"/>
         <div class="header-right">
             <div class="header-user-con">
                 <!-- 用户头像 -->
@@ -25,12 +26,16 @@
 
 <script>
 import bus from "@/components/bus";
+import Breadcrumb from "@/components/parts/Breadcrumb";
 export default {
   data() {
     return {
       username: "admin",
       collapse: false
     };
+  },
+  components: {
+    Breadcrumb
   },
   methods: {
     handleCommand(command) {
@@ -119,5 +124,8 @@ export default {
 }
 .el-dropdown-menu__item {
   text-align: center;
+}
+.breadcrumb-container {
+  float: left;
 }
 </style>
