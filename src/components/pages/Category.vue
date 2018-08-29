@@ -1,41 +1,181 @@
 <template>
     <div>
-        <el-container>
-            <el-header>
-                <span>Category</span>
-                <el-button class="add-button" type="text">添加</el-button>
-            </el-header>
-            <el-main>
-                Main
-            </el-main>
-        </el-container>
+        <el-row>
+            <el-card class="header-card">
+              <span>Category</span>
+              <el-button class="add-button" type="text" @click="handleCreateButton()">添加</el-button>
+            </el-card>
+        </el-row>
+        <el-row>
+          <div class="container">
+              <el-table :data="tableData">
+                <el-table-column type="id" label="序号"></el-table-column>
+                <el-table-column prop="name" label="名称"></el-table-column>
+                <el-table-column prop="code" label="代码"></el-table-column>
+                <el-table-column prop="note" label="备注"></el-table-column>
+                <el-table-column fixed="right" label="操作">
+                  <template slot-scope="scope">
+                    <el-button type="text" icon="el-icon-edit" size="medium" @click="handleEditButton(scope.row)">编辑</el-button>
+                    <el-button type="text" class="delete-button" icon="el-icon-delete" size="medium" @click="handleDeleteButton(scrop.row)">删除</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <div class="pagination">
+                <el-pagination
+                  @size-change="handlePageSizeChange"
+                  @current-change="handleCurrentPageChange"
+                  :current-page="currentPage"
+                  :page-sizes="[20, 30, 50, 100]"
+                  :page-size="pageSize"
+                  layout="total, sizes, prev, pager, next, jumper"
+                  :total="total">
+                </el-pagination>
+              </div>
+          </div>
+        </el-row>
+
+        <!-- 新建产品类型对话框 -->
+        <el-dialog title="新建产品类型" :visible.sync="createVisible" width="70%">
+          <span>新建</span>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="createVisible = false">取 消</el-button>
+            <el-button type="primary" @click="handleCreateConfirm()">确 定</el-button>
+          </span>
+        </el-dialog>
+
+        <!-- 编辑产品类型对话框 -->
+        <el-dialog title="编辑产品类型" :visible.sync="editVisible" width="70%">
+          <!-- <span>编辑 - {{ categoryInfo.name }}</span> -->
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="editVisible = false">取 消</el-button>
+            <el-button type="primary" @click="handleEditConfirm()">确 定</el-button>
+          </span>
+        </el-dialog>
+
+        <!-- 删除产品类型对话框 -->
+        <el-dialog title="删除产品类型" :visible.sync="deleteVisible" width="70%">
+          <span>是否删除 ?</span>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="deleteVisible = false">取 消</el-button>
+            <el-button type="danger" @click="handleDeleteConfirm()">确 定</el-button>
+          </span>
+        </el-dialog>
+        
     </div>
 </template>
 
 <script>
 export default {
-  name: "Category",
+  name: 'Category',
   data() {
-    return {};
+    return {
+      // loading state
+      loading: false,
+      // category table data
+      tableData: [],
+      // pagination
+      currentPage: 1,
+      pageSize: 20,
+      total: 0,
+      // dialogs
+      // create dialog
+      createVisible: false,
+      // edit dialog
+      editVisible: false,
+      // delete dialog
+      deleteVisible: false,
+      // target categry info (id, name, code, note)
+      categoryInfo: null
+    };
+  },
+  created() {
+    console.log('created');
+    this.getTableData();
+  },
+  methods: {
+    getTableData() {
+      //this.loading = true;
+      this.api({
+        url: '/category/list',
+        method: 'get',
+        params: {
+          currentPage: this.currentPage,
+          pageSize: this.pageSize
+        }
+      }).then(returnData => {
+        this.tableData = returnData.list;
+        this.total = returnData.totalCount;
+        //this.loading = false;
+        console.log(this.tableData[0].id);
+      });
+    },
+    handlePageSizeChange(pageSz) {
+      this.pageSize = pageSz;
+      this.getTableData();
+    },
+    handleCurrentPageChange(page) {
+      this.currentPage = page;
+      this.getTableData();
+    },
+    handleCreateButton() {
+      this.createVisible = true;
+    },
+    handleEditButton(row) {
+      this.editVisible = true;
+      this.categoryInfo.id = row.id;
+      this.categoryInfo.name = row.name;
+      this.categoryInfo.code = row.code;
+      this.categoryInfo.note = row.note;
+    },
+    handleDeleteButton(row) {
+      this.deleteVisible = true;
+      this.categoryInfo.id = row.id;
+      this.categoryInfo.name = row.name;
+    },
+    handleCreateConfirm() {
+      this.createVisible = false;
+      this.api({
+        url: '/category/create',
+        method: 'post',
+        data: this.categoryInfo
+      });
+    },
+    handleEditConfirm() {
+      this.editVisible = false;
+      this.api({
+        url: '/category/update',
+        method: 'post',
+        data: this.categoryInfo
+      });
+    },
+    handleDeleteConfirm() {
+      this.deleteVisible = false;
+      this.api({
+        url: '/category/delete',
+        method: 'delete',
+        data: {
+          id: this.categoryInfo.id
+        }
+      });
+    }
   }
 };
 </script>
 
 
 <style scoped>
-.el-header {
-  background-color: #b3c0d1;
-  color: #333;
-  text-align: left;
+.header-card {
   line-height: 60px;
-}
-.el-main {
-  background-color: #e9eef3;
-  color: #333;
-  text-align: center;
-  line-height: 160px;
+  font-size: 18px;
+  margin-bottom: 20px;
 }
 .add-button {
   float: right;
+  font-size: 14px;
+  align-content: space-around;
+  line-height: 40px;
+}
+.delete-button {
+  color: crimson;
 }
 </style>
