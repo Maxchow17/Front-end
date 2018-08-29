@@ -8,15 +8,15 @@
         </el-row>
         <el-row>
           <div class="container">
-              <el-table :data="tableData">
-                <el-table-column type="id" label="序号"></el-table-column>
+              <el-table :data="tableData" v-loading="loading">
+                <el-table-column prop="id" label="序号"></el-table-column>
                 <el-table-column prop="name" label="名称"></el-table-column>
                 <el-table-column prop="code" label="代码"></el-table-column>
                 <el-table-column prop="note" label="备注"></el-table-column>
                 <el-table-column fixed="right" label="操作">
                   <template slot-scope="scope">
                     <el-button type="text" icon="el-icon-edit" size="medium" @click="handleEditButton(scope.row)">编辑</el-button>
-                    <el-button type="text" class="delete-button" icon="el-icon-delete" size="medium" @click="handleDeleteButton(scrop.row)">删除</el-button>
+                    <el-button type="text" class="delete-button" icon="el-icon-delete" size="medium" @click="handleDeleteButton(scope.row)">删除</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -36,7 +36,19 @@
 
         <!-- 新建产品类型对话框 -->
         <el-dialog title="新建产品类型" :visible.sync="createVisible" width="70%">
-          <span>新建</span>
+          <div style="margin: 20px;">
+            <el-form>
+              <el-form-item label="名称">
+                <el-input v-model="categoryInfo.name"></el-input>
+              </el-form-item>
+              <el-form-item label="代码">
+                <el-input v-model="categoryInfo.code"></el-input>
+              </el-form-item>
+              <el-form-item label="备注">
+                <el-input v-model="categoryInfo.note"></el-input>
+              </el-form-item>
+            </el-form>
+          </div>
           <span slot="footer" class="dialog-footer">
             <el-button @click="createVisible = false">取 消</el-button>
             <el-button type="primary" @click="handleCreateConfirm()">确 定</el-button>
@@ -45,7 +57,19 @@
 
         <!-- 编辑产品类型对话框 -->
         <el-dialog title="编辑产品类型" :visible.sync="editVisible" width="70%">
-          <!-- <span>编辑 - {{ categoryInfo.name }}</span> -->
+          <div style="margin: 20px;">
+            <el-form>
+              <el-form-item label="名称">
+                <el-input v-model="categoryInfo.name"></el-input>
+              </el-form-item>
+              <el-form-item label="代码">
+                <el-input v-model="categoryInfo.code"></el-input>
+              </el-form-item>
+              <el-form-item label="备注">
+                <el-input v-model="categoryInfo.note"></el-input>
+              </el-form-item>
+            </el-form>
+          </div>
           <span slot="footer" class="dialog-footer">
             <el-button @click="editVisible = false">取 消</el-button>
             <el-button type="primary" @click="handleEditConfirm()">确 定</el-button>
@@ -54,7 +78,7 @@
 
         <!-- 删除产品类型对话框 -->
         <el-dialog title="删除产品类型" :visible.sync="deleteVisible" width="70%">
-          <span>是否删除 ?</span>
+          <span>是否删除 {{ categoryInfo.name }}?</span>
           <span slot="footer" class="dialog-footer">
             <el-button @click="deleteVisible = false">取 消</el-button>
             <el-button type="danger" @click="handleDeleteConfirm()">确 定</el-button>
@@ -66,7 +90,7 @@
 
 <script>
 export default {
-  name: 'Category',
+  name: "Category",
   data() {
     return {
       // loading state
@@ -85,19 +109,23 @@ export default {
       // delete dialog
       deleteVisible: false,
       // target categry info (id, name, code, note)
-      categoryInfo: null
+      categoryInfo: {
+        id: "",
+        name: "",
+        code: "",
+        note: ""
+      }
     };
   },
   created() {
-    console.log('created');
     this.getTableData();
   },
   methods: {
     getTableData() {
       //this.loading = true;
       this.api({
-        url: '/category/list',
-        method: 'get',
+        url: "/category/list",
+        method: "get",
         params: {
           currentPage: this.currentPage,
           pageSize: this.pageSize
@@ -105,9 +133,14 @@ export default {
       }).then(returnData => {
         this.tableData = returnData.list;
         this.total = returnData.totalCount;
-        //this.loading = false;
-        console.log(this.tableData[0].id);
+        this.loading = false;
       });
+    },
+    clearCategoryInfo() {
+      this.categoryInfo.id = "";
+      this.categoryInfo.name = "";
+      this.categoryInfo.code = "";
+      this.categoryInfo.note = "";
     },
     handlePageSizeChange(pageSz) {
       this.pageSize = pageSz;
@@ -119,6 +152,7 @@ export default {
     },
     handleCreateButton() {
       this.createVisible = true;
+      this.clearCategoryInfo();
     },
     handleEditButton(row) {
       this.editVisible = true;
@@ -135,27 +169,33 @@ export default {
     handleCreateConfirm() {
       this.createVisible = false;
       this.api({
-        url: '/category/create',
-        method: 'post',
+        url: "/category/create",
+        method: "post",
         data: this.categoryInfo
+      }).then(() => {
+        this.getTableData();
       });
     },
     handleEditConfirm() {
       this.editVisible = false;
       this.api({
-        url: '/category/update',
-        method: 'post',
+        url: "/category/update",
+        method: "post",
         data: this.categoryInfo
+      }).then(() => {
+        this.getTableData();
       });
     },
     handleDeleteConfirm() {
       this.deleteVisible = false;
       this.api({
-        url: '/category/delete',
-        method: 'delete',
+        url: "/category/delete",
+        method: "delete",
         data: {
           id: this.categoryInfo.id
         }
+      }).then(() => {
+        this.getTableData();
       });
     }
   }
