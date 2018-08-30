@@ -2,14 +2,15 @@
     <div>
         <el-row>
             <el-card class="header-card">
-              <span>Category</span>
+              <i class="el-icon-document"></i>
+              <span> Category</span>
               <el-button class="add-button" type="text" @click="handleCreateButton()">添加</el-button>
             </el-card>
         </el-row>
         <el-row>
           <div class="container">
               <el-table :data="tableData" v-loading="loading">
-                <el-table-column prop="id" label="序号"></el-table-column>
+                <el-table-column prop="id" label="编号"></el-table-column>
                 <el-table-column prop="name" label="名称"></el-table-column>
                 <el-table-column prop="code" label="代码"></el-table-column>
                 <el-table-column prop="note" label="备注"></el-table-column>
@@ -35,7 +36,7 @@
         </el-row>
 
         <!-- 新建产品类型对话框 -->
-        <el-dialog title="新建产品类型" :visible.sync="createVisible" width="70%">
+        <el-dialog title="新建产品类型" :visible.sync="createVisible" width="30%">
           <div style="margin: 20px;">
             <el-form>
               <el-form-item label="名称">
@@ -45,7 +46,7 @@
                 <el-input v-model="categoryInfo.code"></el-input>
               </el-form-item>
               <el-form-item label="备注">
-                <el-input v-model="categoryInfo.note"></el-input>
+                <el-input type="textarea" v-model="categoryInfo.note"></el-input>
               </el-form-item>
             </el-form>
           </div>
@@ -56,7 +57,7 @@
         </el-dialog>
 
         <!-- 编辑产品类型对话框 -->
-        <el-dialog title="编辑产品类型" :visible.sync="editVisible" width="70%">
+        <el-dialog title="编辑产品类型" :visible.sync="editVisible" width="30%">
           <div style="margin: 20px;">
             <el-form>
               <el-form-item label="名称">
@@ -66,7 +67,7 @@
                 <el-input v-model="categoryInfo.code"></el-input>
               </el-form-item>
               <el-form-item label="备注">
-                <el-input v-model="categoryInfo.note"></el-input>
+                <el-input type="textarea" v-model="categoryInfo.note"></el-input>
               </el-form-item>
             </el-form>
           </div>
@@ -77,7 +78,7 @@
         </el-dialog>
 
         <!-- 删除产品类型对话框 -->
-        <el-dialog title="删除产品类型" :visible.sync="deleteVisible" width="70%">
+        <el-dialog title="删除产品类型" :visible.sync="deleteVisible" width="30%">
           <span>是否删除 {{ categoryInfo.name }}?</span>
           <span slot="footer" class="dialog-footer">
             <el-button @click="deleteVisible = false">取 消</el-button>
@@ -90,7 +91,7 @@
 
 <script>
 export default {
-  name: "Category",
+  name: 'Category',
   data() {
     return {
       // loading state
@@ -110,10 +111,10 @@ export default {
       deleteVisible: false,
       // target categry info (id, name, code, note)
       categoryInfo: {
-        id: "",
-        name: "",
-        code: "",
-        note: ""
+        id: '',
+        name: '',
+        code: '',
+        note: ''
       }
     };
   },
@@ -122,10 +123,10 @@ export default {
   },
   methods: {
     getTableData() {
-      //this.loading = true;
+      this.loading = true;
       this.api({
-        url: "/category/list",
-        method: "get",
+        url: '/category/list',
+        method: 'get',
         params: {
           currentPage: this.currentPage,
           pageSize: this.pageSize
@@ -137,10 +138,10 @@ export default {
       });
     },
     clearCategoryInfo() {
-      this.categoryInfo.id = "";
-      this.categoryInfo.name = "";
-      this.categoryInfo.code = "";
-      this.categoryInfo.note = "";
+      this.categoryInfo.id = '';
+      this.categoryInfo.name = '';
+      this.categoryInfo.code = '';
+      this.categoryInfo.note = '';
     },
     handlePageSizeChange(pageSz) {
       this.pageSize = pageSz;
@@ -169,8 +170,8 @@ export default {
     handleCreateConfirm() {
       this.createVisible = false;
       this.api({
-        url: "/category/create",
-        method: "post",
+        url: '/category/create',
+        method: 'post',
         data: this.categoryInfo
       }).then(() => {
         this.getTableData();
@@ -179,8 +180,8 @@ export default {
     handleEditConfirm() {
       this.editVisible = false;
       this.api({
-        url: "/category/update",
-        method: "post",
+        url: '/category/update',
+        method: 'post',
         data: this.categoryInfo
       }).then(() => {
         this.getTableData();
@@ -189,8 +190,8 @@ export default {
     handleDeleteConfirm() {
       this.deleteVisible = false;
       this.api({
-        url: "/category/delete",
-        method: "delete",
+        url: '/category/delete',
+        method: 'delete',
         data: {
           id: this.categoryInfo.id
         }
